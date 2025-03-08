@@ -1,0 +1,66 @@
+#define the path to the USB relay serial port
+#serialpath = /dev/ttyRELAY0
+
+#define the serial port baud rate
+#serialbaud = 9600
+
+#define the channel at which is linked the relay
+#relaychannel = 1
+
+#define the maximun number of trial to link to the serialpath before give up
+#serialtrials = trials_to_link
+
+#define if the relay feedback should be retrieved, if on and the feedback is not correct, batguard will retray to configure the relay once
+#feedback = on                        
+
+#define if the charger line is linked to the Normally Open pin of the relay (the other option is Normally Closed) 
+#chargerno = true
+
+#define batguard polling time interval in seconds
+#pollingtime = 60
+
+#define the path to the battery charge level
+#batterypath = /sys/class/power_supply/BAT0/capacity
+
+#define the path to the commandfile used to force charger/scheduler status and change profile
+#commandfilepath = /etc/batguard/command
+
+#define the path to the log file
+#logpath = /var/log/batguard.log
+
+#define the log level: 0 for no log, 1 for error, 2 basic information plus 1, 3 details plus 1 and 2
+#loglevel = 2
+
+#define the maximum number of lines of the log file after which it is split
+#logmaxlines = 1000
+
+#define when the log file should be flushed if a message with the given level is wrote of if the number of cached line reaches the limit
+#logflush = 1, 10
+
+#define if at the exit of batguard the charger should be in the last state
+#chargerexitlast = false
+
+#define in which state should be left the charger in case it will not left in the last state
+#chargerexitstate = off 
+
+#define if batguard saves the current states (current profile, current charger enable, and current scheduler enable) every time it changes
+#if enabled, the last state will be reloaded at the next batguard start
+#keepstate = true
+
+#define the path to the file with the state of batguard
+#statefilepath = /opt/batguard/state
+
+#define the charge profiles on the following lines 
+#manual profile will disable batguard operation leaving the user to set the charger though the command file
+profile = home,         50, 60,     off
+profile = short_trip,   60, 70,     off
+profile = mid_trip,     70, 85,     off
+profile = long_trip,    85, 100,    on
+profile = manual,       0,  100,    on
+
+#define the profile schedules on the following lines, enable the scheduler if any is defined
+#use dash for interval and dot to separate value: 1-4.6.8-10 means 1, 2, 3, 4, 6, 8, 9, 10 
+#day of the weeks are entered as numbers: 1 (Sunday), 2 (Monday), 3 (Tuesday), 4 (Wednesday), 5 (Thursday), 6 (Friday), 7 (Saturday) 
+#schedule = enabled, month of years, days of month, days of week, from time, to time, profile name
+#schedule = on, -, -, 2-7, 0.0, 23.59, home
+#schedule = on, -, -,   1, 0.0, 23.59, short_trip

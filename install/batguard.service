@@ -1,0 +1,13 @@
+[Unit]
+Description=batguard is a simple laptop battery charge manager
+Before=sleep.target hibernate.target hybrid-sleep.target shutdown.target 
+After=sleep.target hibernate.target hybrid-sleep.target 
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/batguard
+Restart=on-failure
+RestartPreventExitStatus=1
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,16 @@
+[Unit]
+Description=batguard sleep hook
+Before=sleep.target
+Before=hibernate.target
+Before=hybrid-sleep.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl stop batguard.service
+ExecStop=/usr/bin/systemctl start batguard.service
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sleep.target
+WantedBy=hibernate.target
+WantedBy=hybrid-sleep.target
