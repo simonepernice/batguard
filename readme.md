@@ -1,4 +1,4 @@
-#![batguard icon](./icon/batguard5.ico) batguard
+![batguard icon](./icon/batguard5.ico) batguard
 
 batguard is a laptop battery-charge-manager systemd-service-unit designed to extend the laptop battery lifespan.
 
@@ -259,10 +259,26 @@ The following options are available:
 * -p                        (print the list of capacity profiles loaded from the configuration file and exit)
 * -s                        (print the list of profile schedules loaded from the configuration file and exit)
 * -v                        (print the batguard version and exit)
-* -q                        (read the configuration file and exit, useful to check if there is any error on the configuration)
+* -q                        (read the configuration file and exit)
 * -u                        (print the command file content and exit)
 * -t                        (print the state file content and exit)
 * -h                        (print this help and exit)
+
+### Suggestion for command line usage
+
+Usually, batguard is not called from the command line, it is automatically lunched by systemd. Howere there are few cases where it may be useful to run it, here some explanations:
+
+* -p is useful to learn all the available configurations
+* -s is useful to learn all the available profiles and the one in use (if any)
+* -r is useful to directly control the relay after stopping batguard with the command: sudo systemctl stop batguard
+* -b is useful to know the current battery capacity
+* -t is useful to know what is currently doing batguard
+* -q is useful to verify the current configuration is correct, if any error is present, it is showed on the command line
+* -l is useful to keep trace of some event in the log file
+
+Those flags can be mixed, for instance, to know the profile in use and the battery charge, run the following command:
+
+sudo batguard -b -t
 
 ## Install procedure
 
@@ -270,7 +286,7 @@ Create a temporary directory and clone batguard repository:
 
 * mkdir temp
 * cd temp
-* git clone <batguard url>
+* git clone https://github.com/simonepernice/batguard.git
 
 Make a build folder within batguard, and go into that folder:
 
@@ -284,19 +300,37 @@ Build and install batguard:
 * make batguard
 * sudo make install
 
-Now it is possible to delete all the folders from temp downward  
+For the install process it is required to have the USB Relay plugged in the correct USB port (it is possible to use an USB hub). Once the process is completed it is not possible to change the USB port at which the USB relay is linked.
 
-The install script does not start the batguard services, they will automatically restart at the next boot.
-Before the next boot, it may be required to update /etc/batguard/config with the specific path to the LCUS relay, the computer battery, the specific profiles, optionally adding schedules, or change the other batguard working parameters. The default values are written within comments. Ensure the USB serial relay is connected in the computer and launch batguard with quit option to verify the configuration file is correct: 
+The profiles available after installation are the following:
 
-* sudo batguard -q
+home from 50% to 60% 
+short_trip from 60% to 70% 
+mid_trip from 70% to 85% 
+long_trip from 85% to 100% 
+manual from 0% to 100%
 
-If there is some configuration problem (usually it is the LCUS serial path and/or the battery capacity path), the line in which the problem is detected will be returned as error. If nothing is printed, the configuration is correct.
+To change the current a profile, for instance to short_trip, run the following command:
 
-To start batguard without waiting for reboot, give the following commands:
+echo 'short_trip' > /etc/batguard/command
 
-* sudo systemctl start batguard.service
-* sudo systemctl start batguardsleep.service
+To see the profile in use, run the following command:
+
+sudo batguard -t
+
+There is not any schedule is predefined after installation.
+
+To change profiles, add schedules, modify other the basic settings, edit the file: /etc/batguard/config.
+
+To check the new configuration is correct, use the following command:
+
+sudo batguard -q
+
+If there is any error, an explanation of the problem will be printed on the command line.
+
+It there is not any error, it is possible to reload the new configuration running:
+
+sudo systectl restart batguard
 
 Have a long battery life!!!!
 

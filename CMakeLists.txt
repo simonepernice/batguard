@@ -99,6 +99,14 @@ install (CODE
             endif ()
         ")
         
+install (CODE 
+        "
+            execute_process (COMMAND batguard -q RESULT_VARIABLE result)
+            if (NOT result EQUAL 0) 
+                message (FATAL_ERROR \"Post-install batguard detected some error in its configuration: ${result}\")
+            endif ()
+        ")        
+        
 install (FILES install/batguard.service             DESTINATION /etc/systemd/system PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 install (FILES install/batguardsleep.service        DESTINATION /etc/systemd/system PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 install (FILES install/enablebatguardservices.sh    DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
