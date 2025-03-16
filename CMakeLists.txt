@@ -85,7 +85,7 @@ install (FILES install/makeudevrule.py              DESTINATION ${CMAKE_CURRENT_
 install (FILES install/enablerelayudevrules.sh      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 install (CODE 
         "
-            execute_process (COMMAND /usr/bin/env python3 ${CMAKE_CURRENT_BINARY_DIR}/makeudevrule.sh RESULT_VARIABLE result)
+            execute_process (COMMAND /usr/bin/env python3 ${CMAKE_CURRENT_BINARY_DIR}/makeudevrule.py RESULT_VARIABLE result)
             if (NOT result EQUAL 0) 
                 message (FATAL_ERROR \"Post-install udev rule creation script failed with code: ${result}\")
             endif ()
